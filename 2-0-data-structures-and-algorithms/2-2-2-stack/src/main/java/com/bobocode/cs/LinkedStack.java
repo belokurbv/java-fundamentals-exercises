@@ -64,10 +64,6 @@ public class LinkedStack<T> implements Stack<T> {
         return list;
     }
 
-    public static void main(String[] args) {
-        var list =  of(1,2,3);
-    }
-
     /**
      * The method pushes an element onto the top of this stack. This has exactly the same effect as:
      * addElement(item)
