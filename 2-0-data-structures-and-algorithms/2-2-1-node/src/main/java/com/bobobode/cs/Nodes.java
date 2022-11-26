@@ -1,7 +1,5 @@
 package com.bobobode.cs;
 
-import com.bobocode.util.ExerciseNotCompletedException;
-
 /**
  * A class that consists of static methods only and provides util methods for {@link Node}.
  * <p><p>
@@ -22,7 +20,7 @@ public class Nodes {
      * @return a new instance of {@link Node}
      */
     public static <T> Node<T> create(T element) {
-        throw new ExerciseNotCompletedException(); // todo:
+        return new Node<>(element);
     }
 
     /**
@@ -33,7 +31,7 @@ public class Nodes {
      * @param <T>    a genetic type
      */
     public static <T> void link(Node<T> first, Node<T> second) {
-        throw new ExerciseNotCompletedException(); // todo:
+        first.setNext(second);
     }
 
     /**
@@ -46,7 +44,10 @@ public class Nodes {
      * @return a reference to a first node created based on firstElement
      */
     public static <T> Node<T> pairOf(T firstElement, T secondElement) {
-        throw new ExerciseNotCompletedException(); // todo:
+        var first = new Node<>(firstElement);
+        var second = new Node<>(secondElement);
+        first.setNext(second);
+        return first;
     }
 
     /**
@@ -60,7 +61,21 @@ public class Nodes {
      * @return a reference to the first node
      */
     public static <T> Node<T> closedPairOf(T firstElement, T secondElement) {
-        throw new ExerciseNotCompletedException(); // todo:
+        var first = new Node<>(firstElement);
+        var second = new Node<>(secondElement);
+        first.setNext(second);
+        second.setNext(first);
+        return first;
+    }
+
+    static public <T> Node<T> fillNodeLinkedList(Node<T> first, T[] elements) {
+        var pointer = first;
+        for (var i = 1; i < elements.length; i++) {
+            var node = new Node<T>(elements[i]);
+            pointer.setNext(node);
+            pointer = node;
+        }
+        return pointer;
     }
 
     /**
@@ -72,7 +87,9 @@ public class Nodes {
      * @return a reference to the first element of the chain
      */
     public static <T> Node<T> chainOf(T... elements) {
-        throw new ExerciseNotCompletedException(); // todo:
+        Node<T> first = new Node<T>(elements[0]);
+        fillNodeLinkedList(first, elements);
+        return first;
     }
 
     /**
@@ -85,6 +102,9 @@ public class Nodes {
      * @return a reference to the first element of the chain
      */
     public static <T> Node<T> circleOf(T... elements) {
-        throw new ExerciseNotCompletedException(); // todo:
+        var first = new Node<T>(elements[0]);
+        var ptr = fillNodeLinkedList(first, elements);
+        ptr.setNext(first);
+        return first;
     }
 }
