@@ -1,4 +1,4 @@
-package com.bobocode;
+package com.bobocode.lesson_1;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
