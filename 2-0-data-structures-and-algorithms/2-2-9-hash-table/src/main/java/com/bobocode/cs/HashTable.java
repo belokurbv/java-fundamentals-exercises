@@ -27,6 +27,17 @@ import com.bobocode.util.ExerciseNotCompletedException;
  * @author Taras Boychuk
  */
 public class HashTable<K, V> implements Map<K, V> {
+    private Object[] table;
+
+    static class Node<V> {
+        V element;
+
+        Node<V> next;
+
+        public Node(V element) {
+            this.element = element;
+        }
+    }
 
     /**
      * This method is a critical part of the hast table. The main idea is that having a key, you can calculate its index
@@ -43,7 +54,11 @@ public class HashTable<K, V> implements Map<K, V> {
      * @return array index of the given key
      */
     public static int calculateIndex(Object key, int tableCapacity) {
-        throw new ExerciseNotCompletedException(); // todo:
+        var hash = key.hashCode();
+        if (hash > tableCapacity) {
+            throw new RuntimeException();
+        }
+        return hash;
     }
 
     /**
@@ -59,7 +74,9 @@ public class HashTable<K, V> implements Map<K, V> {
      */
     @Override
     public V put(K key, V value) {
-        throw new ExerciseNotCompletedException(); // todo:
+        if (table[calculateIndex(key, table.length)] != null) {
+
+        }
     }
 
     /**
@@ -71,7 +88,11 @@ public class HashTable<K, V> implements Map<K, V> {
      */
     @Override
     public V get(K key) {
-        throw new ExerciseNotCompletedException(); // todo:
+        var idx = calculateIndex(key, table.length);
+        Node<V> head = (Node<V>) table[idx];
+        while (!head.element.equals(key)) {
+            head = head.next;
+        }
     }
 
     /**
