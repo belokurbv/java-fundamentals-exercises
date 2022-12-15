@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.Random;
 import java.util.function.DoubleConsumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.function.ToLongBiFunction;
 
 public class Util {
@@ -30,7 +29,7 @@ public class Util {
         ToLongBiFunction<Integer, Integer> toLongBiFunction = (s1, s2) -> {
             return s1 + s2;
         };
-        toLongBiFunctionStr.applyAsLong("1" , "2");
+        toLongBiFunctionStr.applyAsLong("1", "2");
         toLongBiFunction.applyAsLong(0, 2);
         var number = Double.valueOf(2d);
 
