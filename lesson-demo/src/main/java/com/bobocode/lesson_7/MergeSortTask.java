@@ -12,7 +12,6 @@ public class MergeSortTask extends RecursiveAction {
 
     @Override
     protected void compute() {
-        System.out.printf("Invoke %s%n", Thread.currentThread().getName());
         if (array.length < 2) {
             return;
         }
