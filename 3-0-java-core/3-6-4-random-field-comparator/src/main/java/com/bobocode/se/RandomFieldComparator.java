@@ -1,7 +1,14 @@
 package com.bobocode.se;
 
+import com.bobocode.data.Accounts;
+import com.bobocode.model.Account;
 import com.bobocode.util.ExerciseNotCompletedException;
-import java.util.Comparator;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
+import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 /**
  * A generic comparator that is comparing a random field of the given class. The field is either primitive or
@@ -17,9 +24,32 @@ import java.util.Comparator;
  * @author Stanislav Zabramnyi
  */
 public class RandomFieldComparator<T> implements Comparator<T> {
+    public static final Map<String, Class<?>> WRAPPERS_MAP = Map.of(
+            "int", Integer.class,
+            "long", Long.class,
+            "float", Float.class,
+            "char",  Character.class,
+            "byte", Byte.class,
+            "short", Short.class,
+            "double", Double.class
+    );
+
+    private Field compared;
 
     public RandomFieldComparator(Class<T> targetType) {
-        throw new ExerciseNotCompletedException(); // todo: implement this constructor;
+        Objects.requireNonNull(targetType);
+        var fields = Arrays.stream(targetType.getDeclaredFields())
+                .peek(System.out::println)
+                .filter(field -> Comparable.class.isAssignableFrom(field.getType()))
+                .toList();
+        if (fields.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        this.compared = fields.get(0);
+    }
+
+    String getRandomField(T object) {
+        return object.getClass().getDeclaredFields()[0].getName();
     }
 
     /**
@@ -34,14 +64,51 @@ public class RandomFieldComparator<T> implements Comparator<T> {
      */
     @Override
     public int compare(T o1, T o2) {
-        throw new ExerciseNotCompletedException(); // todo: implement this method;
+        Objects.requireNonNull(o1);
+        Objects.requireNonNull(o2);
+        var field = getComparingFieldName();
+        try {
+            var field1= o1.getClass().getDeclaredField(field);
+            var field2= o2.getClass().getDeclaredField(field);
+
+            field1.setAccessible(true);
+            field2.setAccessible(true);
+
+            var f1 =  field1.get(o1);
+            var f2 =  field2.get(o2);
+            if (f1 == null && f2 == null) {
+                return 0;
+            } else if (f1 != null && f2 == null) {
+                return 1;
+            } else if (f2 != null && f1 == null) {
+                return -1;
+            }
+
+            if (field1.getType().isPrimitive() && field2.getType().isPrimitive()) {
+                var castClass = WRAPPERS_MAP.get(f1.getClass().getName());
+                f1 = f1.getClass().cast(castClass);
+                f2 = f2.getClass().cast(castClass);
+            }
+
+            return (int) f1.getClass().getDeclaredMethod("compareTo",
+                            o1.getClass().getDeclaredField(field).getType())
+                    .invoke(f1, f2);
+        } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+        //throw new ExerciseNotCompletedException(); // todo: implement this method;
+    }
+
+    public static <U extends Comparable<? super U>> int compare(U o1, U o2) {
+        return 0;
     }
 
     /**
      * Returns the name of the randomly-chosen comparing field.
      */
     public String getComparingFieldName() {
-        throw new ExerciseNotCompletedException(); // todo: implement this method;
+        return compared.getName();
+       // return "balance";
     }
 
     /**
@@ -53,5 +120,14 @@ public class RandomFieldComparator<T> implements Comparator<T> {
     @Override
     public String toString() {
         throw new ExerciseNotCompletedException(); // todo: implement this method;
+    }
+
+    public static void main(String[] args) {
+        RandomFieldComparator<Account> randomFieldComparator = new RandomFieldComparator<>(Account.class);
+        var acc1 = Accounts.generateAccount();
+        var acc2 = Accounts.generateAccount();
+        System.out.println(acc1);
+        System.out.println(acc2);
+        System.out.println(randomFieldComparator.compare(acc1, acc2));
     }
 }
