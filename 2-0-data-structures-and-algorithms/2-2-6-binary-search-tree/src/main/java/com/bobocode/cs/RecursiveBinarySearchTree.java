@@ -2,6 +2,7 @@ package com.bobocode.cs;
 
 import com.bobocode.util.ExerciseNotCompletedException;
 
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 /**
@@ -17,14 +18,33 @@ import java.util.function.Consumer;
  * @author Maksym Stasiuk
  */
 public class RecursiveBinarySearchTree<T extends Comparable<T>> implements BinarySearchTree<T> {
+    Node<T> root;
+    int size = 0;
+    static class Node<T> {
+        T value;
+        Node<T> left;
+        Node<T> right;
+
+        public Node(T value) {
+            this.value = value;
+        }
+
+        public static <T>  Node<T> of(T element) {
+            return new Node<>(element);
+        }
+    }
 
     public static <T extends Comparable<T>> RecursiveBinarySearchTree<T> of(T... elements) {
-        throw new ExerciseNotCompletedException();
+        Arrays.stream(elements).forEach(Node::of);
     }
 
     @Override
     public boolean insert(T element) {
-        throw new ExerciseNotCompletedException();
+        if (root == null) {
+            this.root = Node.of(element);
+        } else {
+
+        }
     }
 
     @Override
