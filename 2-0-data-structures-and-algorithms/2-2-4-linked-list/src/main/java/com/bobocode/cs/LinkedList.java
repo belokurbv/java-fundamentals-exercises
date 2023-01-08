@@ -258,13 +258,39 @@ public class LinkedList<T> implements List<T> {
         size = 0;
     }
 
+    public void reverse() {
+        Node<T> prev = null;
+        Node<T> current = first;
+        Node<T> next = null;
+        while (current != null) {
+            next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+        }
+        first = prev;
+    }
+
+    @Override
+    public String toString() {
+        var sb = new StringBuilder();
+        if (first != null) {
+            var node = first;
+            while (node.next != null) {
+                sb.append(node.value);
+                sb.append(" -> ");
+                node = node.next;
+            }
+            sb.append("null");
+        }
+        return sb.toString();
+    }
+
     public static void main(String[] args) {
         var list = of("1", "2", "3", "4", "5");
         var list2 = new LinkedList<>();
         // list.remove(4);
-        System.out.println(list.getLast());
-        System.out.println(list.remove(list.size - 1));
-        System.out.println(list.getLast());
-        System.out.println(list.get(list.size - 1));
+        list.reverse();
+        System.out.println(list);
     }
 }
