@@ -53,7 +53,6 @@ public class SocketRequest {
             while (buff.readLine() != null) {
                 System.out.println(buff.readLine());
             }
-            //
         }
     }
 }
